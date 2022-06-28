@@ -1,0 +1,26 @@
+{
+  "name": "websocket-server",
+  "version": "1.0.0",
+  "author": "michael",
+  "description": "websocket-server",
+  "license": "MIT",
+  "scripts": {
+    "server": "node server"
+  },
+  "dependencies": {
+    "bufferutil": "^4.0.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "http": "^0.0.1-security",
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.8",
+    "koa2-cors": "^2.0.6",
+    "moment": "^2.24.0",
+    "mysql": "^2.18.1",
+    "request": "^2.88.2",
+    "socket.io": "^2.3.0",
+    "socket.io-stream": "^0.9.1",
+    "utf-8-validate": "^5.0.2",
+    "websocket-stream": "^5.5.2",
+    "ws": "^8.8.0"
+  }
+}
