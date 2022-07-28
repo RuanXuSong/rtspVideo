@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const webSocketStream = require('websocket-stream/stream');
+const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
 const ffmpeg = require('fluent-ffmpeg');
 
 // 建立WebSocket服务
@@ -14,28 +15,35 @@ function handleConnection(ws, req) {
   const url = req.url.slice(1);
   // 传入连接的ws客户端 实例化一个流
   const stream = webSocketStream(ws, { binary: true });
+  ffmpeg.setFfmpegPath(ffmpegInstaller.path);
   // 通过ffmpeg命令 对实时流进行格式转换 输出flv格式
   const ffmpegCommand = ffmpeg(url)
-    .addInputOption('-analyzeduration', '100000', '-max_delay', '1000000')
-    .on('start', function () {
+    .addInputOption(
+      '-analyzeduration',
+      '100000',
+      '-max_delay',
+      '1000000',
+      '-rtsp_transport',
+      'tcp'
+    )
+    .on('start', function() {
       console.log('Stream started.');
     })
-    .on('codecData', function () {
+    .on('codecData', function() {
       console.log('Stream codecData.');
     })
-    .on('error', function (err) {
+    .on('error', function(err, stdout, stderr) {
       console.log('An error occured: ', err.message);
       stream.end();
     })
-    .on('end', function () {
+    .on('end', function() {
       console.log('Stream end!');
       stream.end();
     })
     .outputFormat('flv')
-    .videoCodec('copy')
-    .noAudio();
+    .videoCodec('copy');
 
-  stream.on('close', function () {
+  stream.on('close', function() {
     ffmpegCommand.kill('SIGKILL');
   });
 
